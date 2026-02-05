@@ -1,0 +1,17 @@
+{
+  "name": "tspeed-pro",
+  "version": "3.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-packager . TSpeedPro --platform=win32 --arch=x64 --out=dist/ --overwrite --icon=./img/logo_tspeed1.jpeg"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.10",
+    "archiver": "^7.0.1"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-packager": "^17.1.2"
+  }
+}

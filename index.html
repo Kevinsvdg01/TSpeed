@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSpeed Ultimate</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
+        body {
+            font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text);
+            margin: 0; padding: 20px; display: flex; justify-content: center; height: 90vh; user-select: none;
+        }
+        .container { width: 100%; max-width: 650px; text-align: center; position: relative; }
+        
+        /* Navigation & Header */
+        .logo { width: 80px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h1 { margin: 0 0 5px 0; color: var(--primary); }
+        .top-icons { position: absolute; top: 0; right: 0; }
+        .icon-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b; transition: 0.2s; }
+        .icon-btn:hover { color: var(--primary); transform: rotate(45deg); }
+
+        /* Cartes */
+        .card {
+            background: var(--card); padding: 25px; border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); text-align: left; margin-top: 10px;
+        }
+        .view { display: none; animation: slideIn 0.3s ease-out; }
+        #view-home { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Formulaires */
+        input { width: 100%; padding: 10px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
+        button {
+            background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px;
+            font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s;
+        }
+        button:hover { background: #1d4ed8; }
+        button:disabled { background: #94a3b8; cursor: not-allowed; }
+        
+        .btn-row { display: flex; gap: 15px; margin-top: 20px; }
+        .btn-secondary { background: white; color: var(--text); border: 1px solid #e2e8f0; }
+        .btn-secondary:hover { background: #f1f5f9; }
+
+        /* Drag & Drop Zone */
+        #drop-area {
+            border: 2px dashed #cbd5e1; border-radius: 10px; padding: 30px; text-align: center;
+            background: #f8fafc; cursor: pointer; transition: 0.2s; margin-bottom: 15px;
+        }
+        #drop-area.highlight { border-color: var(--primary); background: #eff6ff; transform: scale(1.02); }
+        .drop-icon { font-size: 3rem; color: #94a3b8; display: block; margin-bottom: 10px; }
+
+        /* Listes & Status */
+        .device-item { padding: 8px; border-bottom: 1px solid #eee; }
+        .status-text { margin-top: 15px; font-weight: 500; font-size: 0.9rem; text-align: center; color: #666; }
+        .progress-track { background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 15px; display: none; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        .back-link { cursor: pointer; color: #64748b; font-weight: 600; display: block; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER -->
+        <div class="top-icons">
+            <button class="icon-btn" onclick="showView('settings')" title="Paramètres">⚙️</button>
+        </div>
+        <img src="./img/logo_tspeed1.jpeg" alt="Logo" class="logo">
+        <h1>TSpeed</h1>
+
+        <!-- VIEW: HOME -->
+        <div id="view-home" class="view">
+            <p style="color:#64748b">Partage local ultra-rapide</p>
+            <div class="btn-row">
+                <button onclick="showView('sender')">📤 Envoyer</button>
+                <button onclick="showView('receiver')" class="btn-secondary">📥 Recevoir</button>
+            </div>
+        </div>
+
+        <!-- VIEW: SETTINGS -->
+        <div id="view-settings" class="view">
+            <a onclick="showView('home')" class="back-link">← Retour</a>
+            <div class="card">
+                <h2>Paramètres</h2>
+                <p>Dossier de réception actuel :</p>
+                <div style="background:#f1f5f9; padding:10px; border-radius:6px; font-family:monospace; margin-bottom:10px; word-break:break-all;" id="current-dl-path">...</div>
+                <button onclick="changeDownloadPath()" class="btn-secondary">📁 Changer le dossier</button>
+                <br><br>
+                <button onclick="openDownloadFolder()" class="btn-secondary">📂 Ouvrir le dossier maintenant</button>
+            </div>
+        </div>
+
+        <!-- VIEW: SENDER -->
+        <div id="view-sender" class="view">
+            <a onclick="showView('home')" class="back-link">← Retour</a>
+            <div class="card">
+                <!-- Zone Scan -->
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <strong>Destinataires</strong>
+                    <button onclick="scanNetwork()" style="width:auto; padding:5px 10px; font-size:0.8rem;">🔄 Scan</button>
+                </div>
+                <div id="device-list" style="max-height:100px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:20px;">
+                    <div style="padding:10px; color:#999; text-align:center;">Cliquez sur Scan...</div>
+                </div>
+
+                <!-- Zone Drag & Drop -->
+                <div id="drop-area" onclick="selectFileOrFolder()">
+                    <span class="drop-icon">📂</span>
+                    <span id="selected-file-name">Glissez un fichier/dossier ici<br>ou cliquez pour choisir</span>
+                </div>
+
+                <label>Code Secret</label>
+                <input type="password" id="pass-sender" placeholder="Ex: 1234">
+                
+                <button onclick="startSender()">Envoyer 🚀</button>
+                
+                <div id="progress-container-sender" class="progress-track">
+                    <div id="progress-bar" class="progress-fill"></div>
+                </div>
+                <div id="status-sender" class="status-text"></div>
+            </div>
+        </div>
+
+        <!-- VIEW: RECEIVER -->
+        <div id="view-receiver" class="view">
+            <a onclick="showView('home')" class="back-link">← Retour</a>
+            <div class="card">
+                <p>IP Locale : <strong id="my-ip" style="color:var(--primary)">...</strong></p>
+                <label>Code Secret</label>
+                <input type="password" id="pass-receiver" placeholder="Ex: 1234">
+                
+                <button id="btn-receive-start" onclick="startReceiver()">Activer la réception 📡</button>
+                <div id="status-receiver" class="status-text">En attente...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
