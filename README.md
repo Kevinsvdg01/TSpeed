@@ -1,14 +1,4 @@
-_________________________________________________________________________
-                                                                        |
-Develloper par K__E__V__I__N    I.  W.  S__A__V__A__D__O__G__O          |
-               |           |    |   |   |                    |          |
-               |     🌐      |    |   |   |        🌐          |          |🔒
-               |           |    |   |   |                    |          |
-_______________________________________________________________________ |
-
-
-
-_____________⚡⚡⚡Nom de l'application : TSpeed⚡⚡⚡________________
+_____________⚡⚡⚡TSpeed⚡⚡⚡________________
 
 Description Courte :
 TSpeed est une application de bureau ultra-rapide conçue pour transférer des fichiers et des dossiers volumineux via le réseau local (LAN), sans nécessiter de connexion Internet.
@@ -59,3 +49,6 @@ C'est ultra rapide 🚀 : Vous n'êtes pas limité par votre vitesse d'abonnemen
 C'est sécurisé 🔒 : Vos fichiers ne transitent pas par des serveurs inconnus.
 
 Donc, vous pouvez utiliser votre app en plein désert, tant que vous avez un petit routeur ou un téléphone pour faire le lien entre les PC !
+
+🚫NB: Code Source sans les dossiers dist/ (contenant le fichier .exe) et node_modules/ (dossier où npm ou yarn, ou pnpm installe toutes les dépendances du projet).
+Vous pouvez les reconstruire en faisant "npm install" d'abord et ensuite "npm run build".
