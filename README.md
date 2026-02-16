@@ -14,7 +14,7 @@ Fonctionnalités Clés :
 
 ✅ Mais OUI, il faut être connecté au même routeur (Box ou système WiFi). 📡
 
-======Voici les détails pour que tout soit clair====== :
+====== Voici les détails pour que tout soit clair ====== :
 
 1. Comment ça marche (Techniquement)
 L'application utilise des adresses IP locales (du type 192.168.x.x).
